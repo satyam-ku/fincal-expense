@@ -1,0 +1,117 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #020202;
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(0, 243, 255, 0.08), transparent 25%), 
+    radial-gradient(circle at 85% 30%, rgba(255, 0, 255, 0.08), transparent 25%);
+  background-attachment: fixed;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
+  color: #f1f1f1;
+  font-family: sans-serif;
+}
+
+.glass-panel {
+  background: rgba(18, 18, 24, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+}
+
+.input-glow {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 18px;
+  text-align: left;
+}
+
+/* OTP field override — keep centered + big mono */
+.input-glow-center {
+  text-align: center;
+}
+
+.input-glow:focus {
+  outline: none;
+  border-color: #00f3ff;
+  background: rgba(0, 20, 40, 0.8);
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.tab-btn { 
+  opacity: 0.5; 
+  transition: all 0.3s ease; 
+  position: relative; 
+  color: white;
+}
+.tab-btn.active { 
+  opacity: 1; 
+  color: white; 
+  text-shadow: 0 0 10px rgba(255,255,255,0.5); 
+}
+.tab-btn.active::after {
+  content: ''; 
+  position: absolute; 
+  bottom: -6px; 
+  left: 50%; 
+  transform: translateX(-50%);
+  width: 20px; 
+  height: 3px; 
+  background: #00f3ff; 
+  border-radius: 10px; 
+  box-shadow: 0 0 10px #00f3ff;
+}
+
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.animate-pop-in { animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+
+@keyframes slideUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up { animation: slideUp 0.4s ease-out forwards; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+.animate-shake { animation: shake 0.2s ease-in-out 0s 2; }
+
+.animate-pulse-slow { animation: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #00f3ff; border-radius: 4px; }
+
+/* Neon color classes */
+.text-neonBlue { color: #00f3ff; }
+.text-neonPink { color: #ff00ff; }
+.text-neonGreen { color: #00ff9d; }
+.text-neonPurple { color: #bf00ff; }
+.text-neonRed { color: #ff3333; }
+.text-neonYellow { color: #f3ff00; }
+.bg-neonBlue { background-color: #00f3ff; }
+.bg-neonGreen { background-color: #00ff9d; }
+.bg-neonPurple { background-color: #bf00ff; }
+
+.border-neonBlue\/20 { border-color: rgba(0, 243, 255, 0.2); }
+.border-neonGreen\/20 { border-color: rgba(0, 255, 157, 0.2); }
+.border-neonPurple\/20 { border-color: rgba(191, 0, 255, 0.2); }
+.border-neonPurple\/30 { border-color: rgba(191, 0, 255, 0.3); }
+.border-neonBlue\/30 { border-color: rgba(0, 243, 255, 0.3); }
+
+.shadow-\[0_0_15px_rgba\(0\,243\,255\,0\.3\)\] { box-shadow: 0 0 15px rgba(0, 243, 255, 0.3); }
+.shadow-\[0_0_15px_rgba\(0\,255\,157\,0\.3\)\] { box-shadow: 0 0 15px rgba(0, 255, 157, 0.3); }
+.shadow-\[0_0_15px_rgba\(191\,0\,255\,0\.3\)\] { box-shadow: 0 0 15px rgba(191, 0, 255, 0.3); }
+.drop-shadow-\[0_0_10px_rgba\(255\,50\,50\,0\.4\)\] { filter: drop-shadow(0 0 10px rgba(255, 50, 50, 0.4)); }
