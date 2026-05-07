@@ -1,18 +1,22 @@
+require('dotenv').config(); // Load env vars explicitly (defensive - server.js calls this too)
 const nodemailer = require('nodemailer');
-
-// Transporter at module level (same as original working version)
-// dotenv.config() is called in server.js before this module loads, so env vars are available
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
 
 const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
 
 const sendOTPEmail = async (email, otp, name) => {
+  // Log to see if env vars are available (visible in backend terminal)
+  console.log(`📧 Sending OTP to: ${email}`);
+  console.log(`🔑 EMAIL_USER: ${process.env.EMAIL_USER || '❌ NOT SET'}`);
+  console.log(`🔑 EMAIL_PASS: ${process.env.EMAIL_PASS ? '✅ SET' : '❌ NOT SET'}`);
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
+  });
+
   const mailOptions = {
     from: `"FinCaL" <${process.env.EMAIL_USER}>`,
     to: email,
@@ -42,7 +46,7 @@ const sendOTPEmail = async (email, otp, name) => {
   };
 
   await transporter.sendMail(mailOptions);
-  console.log(`✅ OTP sent to ${email}`);
+  console.log(`✅ OTP email sent successfully to ${email}`);
 };
 
 module.exports = { generateOTP, sendOTPEmail };
