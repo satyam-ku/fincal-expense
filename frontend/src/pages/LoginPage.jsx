@@ -62,7 +62,15 @@ export default function LoginPage() {
 
     setLoading(true); clearError();
     try {
-      await API.post('/auth/send-otp', { email: email.trim(), name: name.trim() });
+      const res = await API.post('/auth/send-otp', { email: email.trim(), name: name.trim() });
+
+      // Email already registered with password → redirect to login
+      if (res.data.isExistingUser) {
+        switchMode('login');
+        setErr('This email is already registered. Please login with your password.');
+        return;
+      }
+
       setMode('otp');
     } catch (err) {
       const data = err.response?.data;
