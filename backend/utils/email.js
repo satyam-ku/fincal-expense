@@ -1,20 +1,26 @@
 const nodemailer = require('nodemailer');
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
-
 const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
 
 const sendOTPEmail = async (email, otp, name) => {
+  // Validate env vars first — clear error if missing
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    throw new Error('EMAIL_USER or EMAIL_PASS environment variable is not set on the server.');
+  }
+
+  // Create transporter here (not at module level) so env vars are always fresh
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS   // Must be Gmail App Password (16 chars, no spaces)
+    }
+  });
+
   const mailOptions = {
     from: `"FinCaL" <${process.env.EMAIL_USER}>`,
     to: email,
-    subject: 'FinCaL - Your Login OTP',
+    subject: 'FinCaL - Your Signup OTP',
     html: `
       <!DOCTYPE html>
       <html>
@@ -39,7 +45,17 @@ const sendOTPEmail = async (email, otp, name) => {
     `
   };
 
-  await transporter.sendMail(mailOptions);
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`✅ OTP email sent to ${email} — MessageId: ${info.messageId}`);
+  } catch (err) {
+    console.error(`❌ Email send failed to ${email}:`, err.message);
+    // Surface a human-readable error
+    if (err.responseCode === 535 || err.message.includes('Invalid login')) {
+      throw new Error('Gmail auth failed. Check EMAIL_USER and EMAIL_PASS (must be App Password, not regular password).');
+    }
+    throw err;
+  }
 };
 
 module.exports = { generateOTP, sendOTPEmail };
