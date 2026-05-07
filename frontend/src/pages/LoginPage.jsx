@@ -95,9 +95,17 @@ export default function LoginPage() {
 
   const handleResendOTP = async () => {
     setLoading(true); clearError();
-    try { await API.post('/auth/send-otp', { email: email.trim(), name: name.trim() }); }
-    catch { setErr('Failed to resend OTP'); }
-    finally { setLoading(false); }
+    try {
+      const res = await API.post('/auth/send-otp', { email: email.trim(), name: name.trim() });
+      if (res.data.isExistingUser) {
+        switchMode('login');
+        setErr('This email is already registered. Please login.');
+        return;
+      }
+      setError('✅ OTP resent! Check your inbox.');
+    } catch (err) {
+      setErr(err.response?.data?.message || 'Failed to resend OTP. Try again.');
+    } finally { setLoading(false); }
   };
 
   // ── EYE BUTTON ─────────────────────────────────────────────────────────
@@ -348,13 +356,19 @@ export default function LoginPage() {
                 <p className="text-neonBlue font-bold text-sm mt-0.5">{email}</p>
               </div>
 
-              {/* OTP Input */}
+              {/* OTP Input — type=text so leading zeros kept & e/+/- blocked */}
               <div>
                 <label className="block text-[10px] text-gray-500 uppercase tracking-widest mb-2 ml-1 text-center">Enter 6-digit OTP</label>
                 <input
-                  type="number" value={otp}
-                  onChange={e => { if (e.target.value.length <= 6) { setOtp(e.target.value); clearError(); } }}
-                  inputMode="numeric" placeholder="• • • • • •"
+                  type="text"
+                  inputMode="numeric"
+                  value={otp}
+                  onChange={e => {
+                    const val = e.target.value.replace(/\D/g, ''); // digits only
+                    if (val.length <= 6) { setOtp(val); clearError(); }
+                  }}
+                  placeholder="• • • • • •"
+                  maxLength={6}
                   className={`input-glow input-glow-center w-full p-4 rounded-2xl font-mono text-3xl tracking-[0.5em] text-neonBlue
                     ${shake ? 'animate-shake' : ''}`}
                   autoFocus

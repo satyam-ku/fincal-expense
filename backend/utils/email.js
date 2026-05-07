@@ -1,3 +1,4 @@
+require('dotenv').config(); // Must be here — test-email.js works because it has this
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
@@ -14,7 +15,7 @@ const sendOTPEmail = async (email, otp, name) => {
   const mailOptions = {
     from: `"FinCaL" <${process.env.EMAIL_USER}>`,
     to: email,
-    subject: 'FinCaL - Your Login OTP',
+    subject: 'FinCaL - Your OTP',
     html: `
       <!DOCTYPE html>
       <html>
